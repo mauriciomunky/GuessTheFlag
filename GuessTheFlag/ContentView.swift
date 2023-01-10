@@ -14,6 +14,7 @@ struct ContentView: View {
     @State private var scoreTitle = ""
     @State private var totalScore = 0
     @State private var round = 0
+    @State private var gameOverTitle = ""
     @State private var gameOver = false
     var body: some View {
         
@@ -44,10 +45,6 @@ struct ContentView: View {
                             Image(countries[number])
                                 .renderingMode(.original).clipShape(Capsule()).shadow(radius: 5)
                         }
-                        .alert(scoreTitle, isPresented: $gameOver) {
-                            Button("Restart game", action: restartGame) } message: {
-                        Text("Game over! Your score was \(totalScore)")
-                    }
                 }.frame(maxWidth: .infinity)
                     .padding(.vertical, 20)
                     .background(.regularMaterial)
@@ -56,6 +53,10 @@ struct ContentView: View {
                 Button("Continue", action: askQuestion) } message: {
                     Text("Your score is \(totalScore)")
                 }.padding()
+                    .alert(gameOverTitle, isPresented: $gameOver) {
+                        Button("Restart game", action: restartGame) } message: {
+                    Text("Your score was \(totalScore)")
+                        }.padding()
             }
         }
     }
@@ -70,9 +71,10 @@ struct ContentView: View {
             round += 1
         if round == 8 {
             gameOver = true
-            scoreTitle = "Game Over!"
+            gameOverTitle = "Game Over!"
         }
         }
+    
     func askQuestion() {
         countries.shuffle()
         correctAnswer = Int.random(in: 0...2)
@@ -80,8 +82,6 @@ struct ContentView: View {
     func restartGame() {
         totalScore = 0
         round = 0
-        gameOver = false
-        askQuestion()
     }
 }
 
