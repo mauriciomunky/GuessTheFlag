@@ -17,6 +17,7 @@ struct ContentView: View {
     @State private var gameOverTitle = ""
     @State private var gameOver = false
     @State private var animationAmount = 0.0
+    @State private var animating = false
     
     struct FlagImage: View {
         var image: String
@@ -51,8 +52,13 @@ struct ContentView: View {
                     ForEach(0..<3) { number in
                         Button {
                            flagTapped(number)
+                            withAnimation {
+                                animationAmount += 360
+                            }
                         } label: {
-                            FlagImage(image: countries[number])
+                            FlagImage(image: countries[number]).rotation3DEffect(.degrees((number == correctAnswer && animating) ? animationAmount : 0), axis: (x:0,y:1,z:0))
+                                .opacity((number != correctAnswer && animating) ? 0.3 : 1)
+                                .scaleEffect((number != correctAnswer && animating) ? 0.75 : 1)
                         }
                 }.frame(maxWidth: .infinity)
                     .padding(.vertical, 20)
@@ -77,7 +83,7 @@ struct ContentView: View {
             } else {
                 scoreTitle = "Wrong! That's the flag of \(countries[number])"
             }
-        
+            animating = true
             showingScore = true
             round += 1
         if round == 8 {
@@ -89,6 +95,7 @@ struct ContentView: View {
     func askQuestion() {
         countries.shuffle()
         correctAnswer = Int.random(in: 0...2)
+        animating = false
     }
     func restartGame() {
         totalScore = 0
