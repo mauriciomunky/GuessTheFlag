@@ -16,6 +16,7 @@ struct ContentView: View {
     @State private var round = 0
     @State private var gameOverTitle = ""
     @State private var gameOver = false
+    @State private var animationAmount = 0.0
     
     struct FlagImage: View {
         var image: String
@@ -72,9 +73,11 @@ struct ContentView: View {
             if number == correctAnswer {
                 scoreTitle = "Correct"
                 totalScore += 1
+                
             } else {
                 scoreTitle = "Wrong! That's the flag of \(countries[number])"
             }
+        
             showingScore = true
             round += 1
         if round == 8 {
@@ -91,6 +94,7 @@ struct ContentView: View {
         totalScore = 0
         round = 0
     }
+        
 }
 
 struct ContentView_Previews: PreviewProvider {
